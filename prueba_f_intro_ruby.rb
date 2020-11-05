@@ -28,10 +28,10 @@ def buid_web_pag (rober_data)
 
         <!-- Metas -->
         <meta name="author" content="Jorge Sifontes">
-        <meta name="description" content="Images direct from NASA Mars Robers">
-        <meta name="keywords" content="NASA, Mars, Robers">
+        <meta name="description" content="Images direct from NASA Mars Rovers">
+        <meta name="keywords" content="NASA, Mars, Rover, Rovers">
 
-        <title>Rober Page</title>
+        <title>Rover Page</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -48,7 +48,7 @@ def buid_web_pag (rober_data)
             <div class="container">
                 <i class="fas fa-user-astronaut fa-3x"></i>
                 <i class="fas fa-rocket fa-3x"></i>
-                <h1>ROBER PAGE</h1>
+                <h1>ROVER PAGE</h1>
                 <i class="fas fa-robot fa-3x"></i>
                 <i class="fas fa-meteor fa-3x"></i>
             </div>
@@ -65,16 +65,21 @@ def buid_web_pag (rober_data)
                     <li class="list-group-item"><img class="img-fluid h-100" src="'+ img_url +'" alt="img=' + (i.to_s) + '"></li>'
         line += 1
         if i < 24
-            if line == 2
+            if line == 2 || line == 5
                 web_site_html += '
                 </ul> 
                 <ul class="list-group list-group-horizontal-md min-width rounded-0">'
-            elsif line == 5
+            end
+            if line == 5
+                line = 0
+            end
+=begin          elsif line == 5
                 web_site_html += '  
                 </ul> 
                 <ul class="list-group list-group-horizontal-md min-width rounded-0">'
                 line = 0
             end
+=end
         end
     end
 
@@ -86,7 +91,7 @@ def buid_web_pag (rober_data)
 </html>'
 
     #Creacion del archivo HTML
-    File.write("./rober_page.html", web_site_html)
+    File.write("./rover_page.html", web_site_html)
 end
 
 
@@ -111,7 +116,7 @@ end
 url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=34"
 key = "DEMO_KEY"
 
-#key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
+#key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"  #key personal
 
 hash_rober = request(url, key)
 
