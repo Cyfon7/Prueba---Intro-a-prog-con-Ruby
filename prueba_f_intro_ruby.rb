@@ -2,9 +2,8 @@ require "uri"
 require "net/http"
 require 'json'
 
-#Request a web site de NASA
+#Request a API NASA
 def request (url_requested, api_key)
-#    url_builded = url_requested + "?earth_date=2020-11-1&api_key=" + api_key
     url_builded = url_requested + "&api_key=" + api_key
 
     url = URI(url_builded)
@@ -56,36 +55,42 @@ def buid_web_pag (rober_data)
         </nav> 
 
         <div class="container text-center mt-5 pt-5">
-            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+                <ul class="list-group list-group-horizontal-md min-width rounded-0">'
 
-#Seccion donde se genera la lista            
+    #Seccion donde se genera la lista            
     line = 0
     rober_data["photos"].count.times do |i|
         img_url = rober_data["photos"][i]["img_src"] 
         web_site_html = web_site_html + '
-                <li class="list-group-item"><img class="img-fluid" src="'+ img_url +'" alt="img=' + (i.to_s) + '"></li>'
+                    <li class="list-group-item"><img class="img-fluid h-100" src="'+ img_url +'" alt="img=' + (i.to_s) + '"></li>'
         line += 1
-        if line == 2
-            web_site_html += '
-            </ul> 
-            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
-        elsif line == 5
-            web_site_html += '  
-            </ul> 
-            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
-            line = 0
+        if i < 24
+            if line == 2
+                web_site_html += '
+                </ul> 
+                <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+            elsif line == 5
+                web_site_html += '  
+                </ul> 
+                <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+                line = 0
+            end
         end
     end
 
+    #Cierre de la pagina web
     web_site_html += '     
-            </ul>            
+                </ul>            
         </div>
     </body>
 </html>'
 
+    #Creacion del archivo HTML
     File.write("./rober_page.html", web_site_html)
 end
 
+
+#Metodo para el conteo de 
 def photos_count (rober_data)
     camera_count = {}
         
@@ -103,7 +108,7 @@ def photos_count (rober_data)
     camera_count
 end
 
-url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000"
+url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=34"
 key = "DEMO_KEY"
 
 #key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
