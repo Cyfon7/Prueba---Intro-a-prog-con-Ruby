@@ -4,8 +4,9 @@ require 'json'
 
 #Request a web site de NASA
 def request (url_requested, api_key)
-    url_builded = url_requested + "?earth_date=2020-11-1&api_key=" + api_key
-    
+#    url_builded = url_requested + "?earth_date=2020-11-1&api_key=" + api_key
+    url_builded = url_requested + "&api_key=" + api_key
+
     url = URI(url_builded)
 
     https = Net::HTTP.new(url.host, url.port)
@@ -15,131 +16,117 @@ def request (url_requested, api_key)
 
     response = https.request(request)
 
-    resultado = JSON.parse(response.read_body)
+    JSON.parse(response.read_body)
 end
 
 # Metodo para construccion de pagina web para visualizacion
 def buid_web_pag (rober_data)
-    web_site_html = " "
-    web_site_html = "<html>\n \t<head>\n \t</head>\n \t<body>\n \t\t<ul>\n"
+    web_site_html = '
+<!DOCTYPE html>
+<html lang="es" dir="ltr">  
+    <head> 
+        <meta charset="utf-8">
+
+        <!-- Metas -->
+        <meta name="author" content="Jorge Sifontes">
+        <meta name="description" content="Images direct from NASA Mars Robers">
+        <meta name="keywords" content="NASA, Mars, Robers">
+
+        <title>Rober Page</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- CSS de Bootstrap 4.5.2 -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+        <!--Font Awesome-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"> 
+        
+    </head>
     
-    #rober_data["photos"].count.times do |i|   #solo para data original
-    rober_data[:photos].count.times do |i|     #usar para dummy data
-    #    img_url = rober_data["photos"][i]["img_src"]     #solo para data original
-        img_url = rober_data[:photos][i]["img_src"]       #usar para dummy data
+    <body>
+        <nav class="navbar navbar-expand-md navbar-light bg-primary text-white fixed-top px-5">
+            <div class="container">
+                <i class="fas fa-user-astronaut fa-3x"></i>
+                <i class="fas fa-rocket fa-3x"></i>
+                <h1>ROBER PAGE</h1>
+                <i class="fas fa-robot fa-3x"></i>
+                <i class="fas fa-meteor fa-3x"></i>
+            </div>
+        </nav> 
+
+        <div class="container text-center mt-5 pt-5">
+            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+
+#Seccion donde se genera la lista            
+    line = 0
+    rober_data["photos"].count.times do |i|
+        img_url = rober_data["photos"][i]["img_src"] 
+        web_site_html = web_site_html + '
+                <li class="list-group-item"><img class="img-fluid" src="'+ img_url +'" alt="img=' + (i.to_s) + '"></li>'
+        line += 1
+        if line == 2
+            web_site_html += '
+            </ul> 
+            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+        elsif line == 5
+            web_site_html += '  
+            </ul> 
+            <ul class="list-group list-group-horizontal-md min-width rounded-0">'
+            line = 0
+        end
+    end
+    
+    web_site_html += '     
+            </ul>            
+        </div>
+    </body>
+</html>'
+
+=begin
+
+    rober_data["photos"].count.times do |i|   
+        img_url = rober_data["photos"][i]["img_src"]   
         web_site_html = web_site_html + "\t\t\t<li><img src='#{img_url}'></li>\n"
     end
 
     web_site_html += "\t\t</ul>\n \t</body>\n </html>\n"
-    
+=end    
+
     File.write("./rober_page.html", web_site_html)
-
 end
 
-def photos_count ()
-
-end
-
-dummy_hash_rober = {"photos":[{"id": 771812,"sol": 2929,"camera":{"id": 20,"name": "FHAZ","rover_id": 5,"full_name": "Front Hazard Avoidance Camera"},"img_src": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02929/opgs/edr/fcam/FLB_657515400EDR_F0830306FHAZ00206M_.JPG","earth_date": "2020-11-01","rover": {"id": 5,"name": "Curiosity","landing_date": "2012-08-06","launch_date": "2011-11-26","status": "active"}},
-       {
-            "id": 771813,
-            "sol": 2929,
-            "camera": {
-                "id": 20,
-                "name": "FHAZ",
-                "rover_id": 5,
-                "full_name": "Front Hazard Avoidance Camera"
-            },
-            "img_src": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02929/opgs/edr/fcam/FRB_657515400EDR_F0830306FHAZ00206M_.JPG",
-            "earth_date": "2020-11-01",
-            "rover": {
-                "id": 5,
-                "name": "Curiosity",
-                "landing_date": "2012-08-06",
-                "launch_date": "2011-11-26",
-                "status": "active"
-            }
-        },
-        {
-            "id": 771814,
-            "sol": 2929,
-            "camera": {
-                "id": 26,
-                "name": "NAVCAM",
-                "rover_id": 5,
-                "full_name": "Navigation Camera"
-            },
-            "img_src": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02929/opgs/edr/ncam/NLB_657515435EDR_F0830306NCAM00320M_.JPG",
-            "earth_date": "2020-11-01",
-            "rover": {
-                "id": 5,
-                "name": "Curiosity",
-                "landing_date": "2012-08-06",
-                "launch_date": "2011-11-26",
-                "status": "active"
-            }
-        },
-        {
-            "id": 771815,
-            "sol": 2929,
-            "camera": {
-                "id": 26,
-                "name": "NAVCAM",
-                "rover_id": 5,
-                "full_name": "Navigation Camera"
-            },
-            "img_src": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02929/opgs/edr/ncam/NRB_657515435EDR_F0830306NCAM00320M_.JPG",
-            "earth_date": "2020-11-01",
-            "rover": {
-                "id": 5,
-                "name": "Curiosity",
-                "landing_date": "2012-08-06",
-                "launch_date": "2011-11-26",
-                "status": "active"
-            }
-        },
-        {
-            "id": 771816,
-            "sol": 2929,
-            "camera": {
-                "id": 26,
-                "name": "NAVCAM",
-                "rover_id": 5,
-                "full_name": "Navigation Camera"
-            },
-            "img_src": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/02929/opgs/edr/ncam/NRB_657514364EDR_M0830306NCAM00580M_.JPG",
-            "earth_date": "2020-11-01",
-            "rover": {
-                "id": 5,
-                "name": "Curiosity",
-                "landing_date": "2012-08-06",
-                "launch_date": "2011-11-26",
-                "status": "active"
-            }
-       }
-    ]
-}
-
-url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
-key = "DEMO_KEY"
-
-#"wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
-
-#hash_rober = request(url, key)
-buid_web_pag(dummy_hash_rober)
-
-#print hash_rober['photos']
-
-=begin
-hash_rober.each do |data|
-    data[-1].to_a.each do |data1|
-        data1.each do |k, v|
-            puts "#{k} = #{v}"
+def photos_count (rober_data)
+    camera_count = {}
+        
+    rober_data["photos"].each do |photo|
+        photo["camera"].each do |k, v|
+            if k == "name"
+                if camera_count.include? v
+                    camera_count[v] += 1
+                else
+                    camera_count[v] = 1
+                end
+            end
         end
     end
+    camera_count
 end
-=end
 
+#url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&"
+#key = "DEMO_KEY"
+
+key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
+
+hash_rober = request(url, key)
+
+buid_web_pag(hash_rober)
+
+puts photos_count(hash_rober)
+
+
+=begin
 dummy_hash_rober.each do |k, v|
     v.count.times do |i|
         v[i].each do |k1, v1|
@@ -152,3 +139,4 @@ dummy_hash_rober.each do |k, v|
 end
 
 puts dummy_hash_rober[:photos][0][:img_src]
+=end
