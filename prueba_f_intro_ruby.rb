@@ -76,22 +76,12 @@ def buid_web_pag (rober_data)
             line = 0
         end
     end
-    
+
     web_site_html += '     
             </ul>            
         </div>
     </body>
 </html>'
-
-=begin
-
-    rober_data["photos"].count.times do |i|   
-        img_url = rober_data["photos"][i]["img_src"]   
-        web_site_html = web_site_html + "\t\t\t<li><img src='#{img_url}'></li>\n"
-    end
-
-    web_site_html += "\t\t</ul>\n \t</body>\n </html>\n"
-=end    
 
     File.write("./rober_page.html", web_site_html)
 end
@@ -113,30 +103,13 @@ def photos_count (rober_data)
     camera_count
 end
 
-#url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
-url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&"
-#key = "DEMO_KEY"
+url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000"
+key = "DEMO_KEY"
 
-key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
+#key = "wj0mdRdT2AjiAi3yOPBz2kjBgvNtxEP7hW0Nf8rz"
 
 hash_rober = request(url, key)
 
 buid_web_pag(hash_rober)
 
 puts photos_count(hash_rober)
-
-
-=begin
-dummy_hash_rober.each do |k, v|
-    v.count.times do |i|
-        v[i].each do |k1, v1|
-            if k1 == :img_src
-                print "#{k1} = #{v1} \n"
-            end
-        end
-        print "\n"
-    end
-end
-
-puts dummy_hash_rober[:photos][0][:img_src]
-=end
