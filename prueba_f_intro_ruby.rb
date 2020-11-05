@@ -73,13 +73,6 @@ def buid_web_pag (rober_data)
             if line == 5
                 line = 0
             end
-=begin          elsif line == 5
-                web_site_html += '  
-                </ul> 
-                <ul class="list-group list-group-horizontal-md min-width rounded-0">'
-                line = 0
-            end
-=end
         end
     end
 
